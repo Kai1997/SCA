@@ -31,11 +31,11 @@ contract Factories{
         int[3] npk;
         string detail;
     }
-    
+
     //This struct represents fertilizerLot status
     //ownerWallet : address of the owner of this product lot
     //date        : produced time
-    //price       : price of this lot 
+    //price       : price of this lot
     //producedMax : amount of fertilizer that produced
     //producedUsed: Array for record all factory product
     //producedSold: Detail of fertilizerId
@@ -52,18 +52,17 @@ contract Factories{
 
     //This mapping represents factoryStatus by map address to status
     mapping(address => Status) factoryStatus;
-    
+
     //This mapping represents factory identity by map address to factory information
     mapping(address => Factory) factoryDatabase;
-    
+
     //This mappin represents all produced lot by map lot's id to it's information
     mapping(bytes32 => FertilizerSupply) fertilizerTagSupply;
-    
+
     //Constructure of this contract for now it's do nothing
     function Factories()public{
-
     }
-    
+
     //This modifier use to allow only owner to execute function
     modifier owner(){
         require(msg.sender == factoryDatabase[msg.sender].wallet);
@@ -77,10 +76,9 @@ contract Factories{
         factoryDatabase[msg.sender].name = _name;
         factoryDatabase[msg.sender].facAddress = _facAddress;
         factoryDatabase[msg.sender].id = keccak256(_name,_facAddress,msg.sender);
-
     }
 
-    //This function use to create new product(fertilizer), it's require some information that fertilizerInfo need. 
+    //This function use to create new product(fertilizer), it's require some information that fertilizerInfo need.
     function newFertLine(bytes32 _fertilizerId, int[3] _npk, string _description)public owner{
         require(!isFertExist(_fertilizerId));
         factoryDatabase[msg.sender].fertilizerId.push(_fertilizerId);
@@ -100,7 +98,7 @@ contract Factories{
         fertilizerTagSupply[produceTag].producedMax = _produceMax;
     }
 
-    //This function use to sell fertilizer to farmer. 
+    //This function use to sell fertilizer to farmer.
     function sellFert(bytes32 _fertilizerId, bytes32 _produceTag, uint _buyAmount)public{
         require(isFertExist(_fertilizerId));
         require(isFertTagExist(_fertilizerId,_produceTag));

@@ -126,7 +126,7 @@ contract Farmers{
         farmerDatabase[msg.sender].usedFarmArea = getUsedFarmArea() - farmTag[_farmId].usedArea;
         farmTag[_farmId].harvestDate = now;
         farmTag[_farmId].havestamount = _harvestAmount;
-        exchange.addProduct(_farmId,_harvestAmount,msg.sender,this);
+        exchange.addProduct(_farmId,_harvestAmount,this);
     }
 
     //this function use to buy Fertilizer from FACTORIES_CONTRACT,

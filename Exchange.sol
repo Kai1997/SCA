@@ -49,7 +49,7 @@ contract Exchange{
     }
 
     //This function use to create new farmProduct that is divided from the other.
-    function divideProduct(bytes32 _farmProductId, uint _amount)public returns(bytes32){
+    function divideProduct(bytes32 _farmProductId, uint _amount)private returns(bytes32){
         bytes32 _newFarmProductId = keccak256(_farmProductId,msg.sender,_amount,now);
         require(farmProduct[_newFarmProductId].owner == address(0));
         require(farmProduct[_farmProductId].currentSupply >= _amount);
@@ -75,15 +75,6 @@ contract Exchange{
         distributorFarmProductOwn[msg.sender].push(divideProduct(_farmProductId,_amount));
         farmProduct[_farmProductId].owner.transfer(msg.value);
     }
-
-    //This function is for distributor who wwant to buy product from other distributor
-    // function buyFromDistributor(bytes32 _farmProductId, uint _amount, address _owner)public payable{
-
-    //     require(distributor[_owner][_farmProductId] >= _amount);
-    //     distributor[_owner][_farmProductId] -= _amount;
-    //     distributor[msg.sender][_farmProductId] += _amount;
-    //     _owner.transfer(msg.value);
-    // }
 
     //This function use to burn product when sell to retail store such as top
     function retailStore(bytes32 _farmProductId, uint _amount)public{

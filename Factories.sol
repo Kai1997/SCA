@@ -39,7 +39,7 @@ contract Factories{
     //producedMax : amount of fertilizer that produced
     //producedUsed: Array for record all factory product
     //producedSold: Detail of fertilizerId
-    //holder      :
+    //holder      : mapping that map fertilizer buyer to amount that total buy
     struct FertilizerSupply{
         address ownerWallet;
         uint date;

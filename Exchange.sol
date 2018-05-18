@@ -39,47 +39,46 @@ contract Exchange{
     }
 
     //This function use to add harvested product to this contract
-    function addProduct(bytes32 _farmProductTag, uint _totalSupply,address _FARMER_CONTRACT)public{
+    function addProduct(bytes32 _farmProductId, uint _totalSupply,address _FARMER_CONTRACT)public{
         require(_FARMER_CONTRACT == FARMER_CONTRACT);
-        bytes32 _farmProductId = keccak256(_farmProductTag,msg.sender,_totalSupply,now);
         farmProduct[_farmProductId].farmProductId = _farmProductId;
-        farmProduct[_farmProductId].farmProductTag = _farmProductTag;
+        farmProduct[_farmProductId].farmProductTag = _farmProductId;
         farmProduct[_farmProductId].owner = msg.sender;
         farmProduct[_farmProductId].totalSupply = _totalSupply;
         farmProduct[_farmProductId].currentSupply = _totalSupply;
     }
-    
+
     //This function use to create new farmProduct that is divided from the other.
     function divideProduct(bytes32 _farmProductId, uint _amount)public returns(bytes32){
         bytes32 _newFarmProductId = keccak256(_farmProductId,msg.sender,_amount,now);
         require(farmProduct[_newFarmProductId].owner == address(0));
         require(farmProduct[_farmProductId].currentSupply >= _amount);
-        
+
         farmProduct[_newFarmProductId].farmProductId = _newFarmProductId;
         farmProduct[_newFarmProductId].farmProductTag = farmProduct[_farmProductId].farmProductTag;
         farmProduct[_newFarmProductId].owner = msg.sender;
         farmProduct[_newFarmProductId].totalSupply = _amount;
         farmProduct[_newFarmProductId].parentFarmProduct = _farmProductId;
         farmProduct[_newFarmProductId].currentSupply = _amount;
-        
+
         farmProduct[_farmProductId].currentSupply -= _amount;
         farmProduct[_farmProductId].childFarmProduct.push(_newFarmProductId);
-        
+
         return _newFarmProductId;
-        
+
     }
 
     //This function is for distributor who wwant to buy product from farmer
     function buyFarmProduct(bytes32 _farmProductId, uint _amount)public payable{
         require(farmProduct[_farmProductId].currentSupply >= _amount);
-        
+
         distributorFarmProductOwn[msg.sender].push(divideProduct(_farmProductId,_amount));
         farmProduct[_farmProductId].owner.transfer(msg.value);
     }
 
     //This function is for distributor who wwant to buy product from other distributor
     // function buyFromDistributor(bytes32 _farmProductId, uint _amount, address _owner)public payable{
-        
+
     //     require(distributor[_owner][_farmProductId] >= _amount);
     //     distributor[_owner][_farmProductId] -= _amount;
     //     distributor[msg.sender][_farmProductId] += _amount;
